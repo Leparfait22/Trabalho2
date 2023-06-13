@@ -1,9 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MAX_IN_MEMORY 5
-
 
 void swap(int *A,int i,int j){
     int aux = A[i];
@@ -105,34 +102,12 @@ void mergeSort(int *A, int size){
     primeiroMerge(A,0,size);
 }
 
-typedef struct {
-    int valor;
-    int posicao;
-} MenorElemento;
-
-MenorElemento Menores(int vetor[], int tamanho) {
-    MenorElemento menor;
-    menor.valor = vetor[0];
-    menor.posicao = 0;
-
-    for (int i = 1; i < tamanho; i++) {
-        if (vetor[i] < menor.valor) {
-            menor.valor = vetor[i];
-            menor.posicao = i;
-        }
-    }
-
-    return menor;
-}
-
 
 int main() {
     int bloco[MAX_IN_MEMORY];
     char nomes[MAX_IN_MEMORY * 2][20];
     FILE *arquivosEntrada[MAX_IN_MEMORY];
     FILE *arquivosSaida[MAX_IN_MEMORY];
-    FILE *arquivo;
-    int vetTemp[5];
     
     
     int chaves1[] = {3, 98, 61, 62,  1, 99, 57, 98, 58, 18, 59, 35, 82, 91, 52, 95, 46,
@@ -141,49 +116,50 @@ int main() {
     int chaves2[] = {57, 91, 21, 89, 72, 74, 46, 61, 26, 50, 85, 76, 53, 22, 15, 40, 90, 2, 94, 54};
     int chaves3[] = {9,  2, 15, 19, 10, 14,  4, 13,  2, 19};
     int chaves4[] = {178, 231, 244, 292, 321, 356, 389, 421, 482, 488, 490, 502, 546, 641, 694, 786, 841, 890, 899, 922};
+    
+    while (1){
+        for (int i = 0; i < (MAX_IN_MEMORY*2); i++) {
+            if(i< MAX_IN_MEMORY){
+                sprintf(nomes[i], "arquivo%d.txt", i + 1);
+                printf("%s\n", nomes[i]);
 
-    for (int i = 0; i < (MAX_IN_MEMORY*2); i++) {
-        if(i< MAX_IN_MEMORY){
-            sprintf(nomes[i], "entrada%d.txt", i + 1);
-            printf("A%s\n", nomes[i]);
-
-            arquivosEntrada[i] = fopen(nomes[i], "w");
-            if (arquivosEntrada[i] == NULL) {
-                printf("Não foi possível criar o arquivo %s.\n", nomes[i]);
-                return 1;
-        }
-        }
-        // arquivo intermediário já criado
-        int inicio = MAX_IN_MEMORY * i;
-        int limite = inicio + MAX_IN_MEMORY - 1;
-
-        // preenchendo o bloco com elementos
-        for (int j = inicio; j <= limite; j++) {
-            bloco[j - inicio] = chaves1[j];
-        }
-
-        // ordenando o bloco
-        quickSort(bloco, MAX_IN_MEMORY - 1);
-
-        // verificando se o bloco foi criado com sucesso e ordenado
-        for (int k = 0; k < MAX_IN_MEMORY; k++) {
-            printf("%d\n", bloco[k]);
-        }
-
-        // escrevendo o bloco ordenado no arquivo
-        for (int k = 0; k < MAX_IN_MEMORY; k++) {
-            if(i<MAX_IN_MEMORY){
-                fprintf(arquivosEntrada[i], "%d\n", bloco[k]);
-            }else{
-                fprintf(arquivosEntrada[i-MAX_IN_MEMORY], "%d\n", bloco[k]);
+                arquivosEntrada[i] = fopen(nomes[i], "w");
+                if (arquivosEntrada[i] == NULL) {
+                    printf("Não foi possível criar o arquivo %s.\n", nomes[i]);
+                    return 1;
             }
-        }
+            }
+            // arquivo intermediário já criado
+            int inicio = MAX_IN_MEMORY * i;
+            int limite = inicio + MAX_IN_MEMORY - 1;
+
+            // preenchendo o bloco com elementos
+            for (int j = inicio; j <= limite; j++) {
+                bloco[j - inicio] = chaves1[j];
+            }
+
+            // ordenando o bloco
+            quickSort(bloco, MAX_IN_MEMORY - 1);
+
+            // verificando se o bloco foi criado com sucesso e ordenado
+            for (int k = 0; k < MAX_IN_MEMORY; k++) {
+                printf("%d\n", bloco[k]);
+            }
+
+            // escrevendo o bloco ordenado no arquivo
+            for (int k = 0; k < MAX_IN_MEMORY; k++) {
+                if(i<MAX_IN_MEMORY){
+                    fprintf(arquivosEntrada[i], "%d\n", bloco[k]);
+                }else{
+                    printf("i = %d\n",i);
+                    fprintf(arquivosEntrada[i-MAX_IN_MEMORY], "%d\n", bloco[k]);
+                }
+            }
 
         //fclose(arquivosEntrada[i]);
-    }
-
-
-    //intercalacao nos arquivos de saidas
+        } 
+   }
+    
     for(int i = 0;i< (MAX_IN_MEMORY*2);i++){
         if(i< MAX_IN_MEMORY){
             sprintf(nomes[i], "saida%d.txt", i + 1);
@@ -197,54 +173,14 @@ int main() {
         }
     }
 
-/* printf("Digite o nome do arquivo a ser lido: ");
-    scanf("%s", nomeArquivo);
-
-    arquivo = fopen(nomeArquivo, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return 1;
-    }
 
 
-
-    printf("Conteúdo do arquivo:\n");
-
-    while(!feof(fp)) {
- c = fgetc(fp);
- printf("%c", c);
-}
-
-    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
-        printf("%s", linha);
-    } */
-
-    for(int i = 0;i< MAX_IN_MEMORY;i++){
-        printf("i= %d\n",i);
-        printf("nome arquivo = %s\n",nomes[i]);
-        arquivo = fopen("entrada%d","r");
-
-        if (arquivo == NULL){
-            printf("Erro ao ler arquivo%d\n",i+1);
-            return 1;
-        }
-        int leitor;
-        fscanf(arquivo, "%d", &leitor);
-        printf("leitor = %d\n",leitor);
-        vetTemp[i] = leitor;
-    }
-    for(int j = 0;j< MAX_IN_MEMORY;j++){
-        printf("vetTemp[%d]  = %d\n",j,vetTemp[j]);
-    }
-
-
-/* 
     int tamanhoVetor = (int)sizeof(chaves1)/sizeof(int);
     mergeSort(chaves1,tamanhoVetor-1);
         printf("\nMerge sort: ");
         for (int i = 0 ; i < tamanhoVetor ; i++)
             printf("%d ", chaves1[i]);
-        printf("\n"); */
+        printf("\n");
 
 
     return 0;
