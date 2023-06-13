@@ -125,6 +125,11 @@ MenorElemento Menores(int vetor[], int tamanho) {
     return menor;
 }
 
+char* nomeArquivo(int numero) {
+    char* nome_arquivo = (char*)malloc(sizeof(char) * 15); // Tamanho máximo necessário é 13: "entradaX.txt\0"
+    sprintf(nome_arquivo, "entrada%d.txt", numero);
+    return nome_arquivo;
+}
 
 int main() {
     int bloco[MAX_IN_MEMORY];
@@ -133,6 +138,7 @@ int main() {
     FILE *arquivosSaida[MAX_IN_MEMORY];
     FILE *arquivo;
     int vetTemp[5];
+    int leitor;
     
     
     int chaves1[] = {3, 98, 61, 62,  1, 99, 57, 98, 58, 18, 59, 35, 82, 91, 52, 95, 46,
@@ -145,7 +151,7 @@ int main() {
     for (int i = 0; i < (MAX_IN_MEMORY*2); i++) {
         if(i< MAX_IN_MEMORY){
             sprintf(nomes[i], "entrada%d.txt", i + 1);
-            printf("A%s\n", nomes[i]);
+            printf("%s\n", nomes[i]);
 
             arquivosEntrada[i] = fopen(nomes[i], "w");
             if (arquivosEntrada[i] == NULL) {
@@ -178,64 +184,31 @@ int main() {
                 fprintf(arquivosEntrada[i-MAX_IN_MEMORY], "%d\n", bloco[k]);
             }
         }
+    
+    
+
+           //while (fscanf(arquivo, "%d", &numero) != EOF) {
+
+    
 
         //fclose(arquivosEntrada[i]);
+
     }
 
-
-    //intercalacao nos arquivos de saidas
-    for(int i = 0;i< (MAX_IN_MEMORY*2);i++){
-        if(i< MAX_IN_MEMORY){
-            sprintf(nomes[i], "saida%d.txt", i + 1);
-            printf("%s\n", nomes[i]);
-
-            arquivosSaida[i] = fopen(nomes[i], "w");
-            if (arquivosEntrada[i] == NULL) {
-                printf("Não foi possível criar o arquivo %s.\n", nomes[i]);
+   for(int i = 0;i<MAX_IN_MEMORY;i++){
+        int vetTemp[MAX_IN_MEMORY];
+        arquivo = fopen(nomeArquivo(i+1), "r");  
+        if (arquivo == NULL) {
+                printf("arquivo nao criado %s.\n", nomes[i]);
                 return 1;
-           }
-        }
+        }// Abre o arquivo para leitura
+       while (fscanf(arquivo, "%d", &leitor) != EOF) {
+        printf("leitor = %d\n", leitor);  // Imprime o número na saída padrão
     }
+        
+        
+    } 
 
-/* printf("Digite o nome do arquivo a ser lido: ");
-    scanf("%s", nomeArquivo);
-
-    arquivo = fopen(nomeArquivo, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return 1;
-    }
-
-
-
-    printf("Conteúdo do arquivo:\n");
-
-    while(!feof(fp)) {
- c = fgetc(fp);
- printf("%c", c);
-}
-
-    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
-        printf("%s", linha);
-    } */
-
-    for(int i = 0;i< MAX_IN_MEMORY;i++){
-        printf("i= %d\n",i);
-        printf("nome arquivo = %s\n",nomes[i]);
-        arquivo = fopen("entrada%d","r");
-
-        if (arquivo == NULL){
-            printf("Erro ao ler arquivo%d\n",i+1);
-            return 1;
-        }
-        int leitor;
-        fscanf(arquivo, "%d", &leitor);
-        printf("leitor = %d\n",leitor);
-        vetTemp[i] = leitor;
-    }
-    for(int j = 0;j< MAX_IN_MEMORY;j++){
-        printf("vetTemp[%d]  = %d\n",j,vetTemp[j]);
-    }
 
 
 /* 
