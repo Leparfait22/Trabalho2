@@ -4,6 +4,9 @@
 
 #define MAX_IN_MEMORY 5
 
+#define TAMANHO_VETOR 5
+
+
 
 void swap(int *A,int i,int j){
     int aux = A[i];
@@ -125,20 +128,24 @@ MenorElemento Menores(int vetor[], int tamanho) {
     return menor;
 }
 
-char* nomeArquivo(int numero) {
+/* char* nomeArquivo(int numero) {
     char* nome_arquivo = (char*)malloc(sizeof(char) * 15); // Tamanho máximo necessário é 13: "entradaX.txt\0"
     sprintf(nome_arquivo, "entrada%d.txt", numero);
     return nome_arquivo;
-}
+} */
 
 int main() {
     int bloco[MAX_IN_MEMORY];
-    char nomes[MAX_IN_MEMORY * 2][20];
+    char nomes[MAX_IN_MEMORY][15];
+    char nomeSaida[MAX_IN_MEMORY][15];
     FILE *arquivosEntrada[MAX_IN_MEMORY];
     FILE *arquivosSaida[MAX_IN_MEMORY];
     FILE *arquivo;
     int vetTemp[5];
     int leitor;
+    int vetor[TAMANHO_VETOR];
+    int i, j;
+
     
     
     int chaves1[] = {3, 98, 61, 62,  1, 99, 57, 98, 58, 18, 59, 35, 82, 91, 52, 95, 46,
@@ -153,7 +160,7 @@ int main() {
             sprintf(nomes[i], "entrada%d.txt", i + 1);
             printf("%s\n", nomes[i]);
 
-            arquivosEntrada[i] = fopen(nomes[i], "w");
+            arquivosEntrada[i] = fopen(nomes[i], "r");
             if (arquivosEntrada[i] == NULL) {
                 printf("Não foi possível criar o arquivo %s.\n", nomes[i]);
                 return 1;
@@ -184,31 +191,60 @@ int main() {
                 fprintf(arquivosEntrada[i-MAX_IN_MEMORY], "%d\n", bloco[k]);
             }
         }
-    
-    
-
-           //while (fscanf(arquivo, "%d", &numero) != EOF) {
-
-    
+            printf("AQUI0\n");
 
         //fclose(arquivosEntrada[i]);
-
     }
 
-   for(int i = 0;i<MAX_IN_MEMORY;i++){
-        int vetTemp[MAX_IN_MEMORY];
-        arquivo = fopen(nomeArquivo(i+1), "r");  
-        if (arquivo == NULL) {
-                printf("arquivo nao criado %s.\n", nomes[i]);
+    for(int i= 0;i<MAX_IN_MEMORY;i++){
+        char nomeArquivo[15];
+        sprintf(nomeArquivo, "entrada%d.txt", i + 1);
+        //printf("Para abrir nome = %s\n", nomeArquivo);
+
+        arquivo = fopen(nomeArquivo, "r");
+            if (arquivo == NULL) {
+                printf("Não foi possível criar o arquivo %s para leitura .\n", nomeArquivo);
                 return 1;
-        }// Abre o arquivo para leitura
-       while (fscanf(arquivo, "%d", &leitor) != EOF) {
-        printf("leitor = %d\n", leitor);  // Imprime o número na saída padrão
-    }
-        
-        
-    } 
+        }
+       /*  printf("Mostrando\n");
+        while (fscanf(arquivo, "%d", &leitor) == 1) {
+            printf("%d \n", leitor);
+        } */
 
+        if (fscanf(arquivo, "%d", &leitor) == 1) {
+            //printf("O primeiro número do arquivo é: %d\n", leitor);
+        } else {
+            printf("O arquivo está vazio ou não contém números inteiros.\n");
+        }
+            printf("caracter lido : %d\n",leitor);
+
+        vetTemp[i] = leitor;
+        
+        
+        sprintf(nomeSaida[i], "saida%d.txt", i + 1);
+        //printf("%s\n", nomeSaida[i]);
+
+      
+
+
+
+
+
+
+    }
+
+   
+    for(int i= 0;i<MAX_IN_MEMORY;i++){
+        printf("%d ",vetTemp[i]);
+    }
+    printf("\n");
+     MenorElemento menor = Menores(vetTemp, MAX_IN_MEMORY);
+        printf("Menor valor: %d\n ",menor.valor);
+
+
+    
+
+    
 
 
 /* 
