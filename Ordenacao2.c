@@ -160,7 +160,7 @@ int main() {
             sprintf(nomes[i], "entrada%d.txt", i + 1);
             printf("%s\n", nomes[i]);
 
-            arquivosEntrada[i] = fopen(nomes[i], "r");
+            arquivosEntrada[i] = fopen(nomes[i], "w");
             if (arquivosEntrada[i] == NULL) {
                 printf("Não foi possível criar o arquivo %s.\n", nomes[i]);
                 return 1;
