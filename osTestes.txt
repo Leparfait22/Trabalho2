@@ -1,0 +1,7 @@
+printf("I = %d\n",i);
+printf("Numero de elemento : %d\n",tamVetorPrincipal);
+printf("Não foi possível criar o arquivo %s.\n", nomesEntrada[i]);
+printf("verificacao do bloco\n");
+printf("Arquivo para escrever %s\n", nomesEntrada[i]);
+printf("Elemento retante = %d\n",elementoRestante);
+
