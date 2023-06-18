@@ -182,8 +182,7 @@ void particionarVetor(int vetor[], int tamamnho){
                 fprintf(arquivosEntrada[i-MAX_IN_MEMORY*(i/MAX_IN_MEMORY)], "%d\n", bloco[k]);
             }
         }
-        // se ainda sobra elemento no vetro principal 
-        //ele é escrito na entrada final do arquivo
+        // se ainda sobra elemento no vetro principal ele é escrito na entrada final do arquivo
         if(i == (tamVetorPrincipal/MAX_IN_MEMORY)-1){
             int elementoRestante = tamVetorPrincipal -((i+1) * MAX_IN_MEMORY);
             if(elementoRestante > 0){
@@ -204,11 +203,65 @@ void particionarVetor(int vetor[], int tamamnho){
 
 }
 
+void ordenarMatriz(int matriz[][MAX_IN_MEMORY], int linhas, int colunas) {
+    for (int k = 0; k < linhas * colunas - 1; k++) {
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                int linhaAtual = i;
+                int colunaAtual = j;
+
+                // Encontra o menor elemento a partir da posição atual
+                for (int m = i; m < linhas; m++) {
+                    for (int n = (m == i ? j + 1 : 0); n < colunas; n++) {
+                        if (matriz[m][n] < matriz[linhaAtual][colunaAtual]) {
+                            linhaAtual = m;
+                            colunaAtual = n;
+                        }
+                    }
+                }
+
+                // Troca o elemento atual com o menor elemento encontrado
+                if (linhaAtual != i || colunaAtual != j) {
+                    int temp = matriz[i][j];
+                    matriz[i][j] = matriz[linhaAtual][colunaAtual];
+                    matriz[linhaAtual][colunaAtual] = temp;
+                }
+            }
+        }
+    }
+}
+
+void imprimirMatriz(int matriz[][MAX_IN_MEMORY], int linhas, int colunas) {
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
 /* char* nomeArquivo(int numero) {
     char* nome_arquivo = (char*)malloc(sizeof(char) * 15); // Tamanho máximo necessário é 13: "entradaX.txt\0"
     sprintf(nome_arquivo, "entrada%d.txt", numero);
     return nome_arquivo;
 } */
+
+void salvarMatrizEmArquivo(const char* nomeArquivo, int matriz[][5], int linhas, int colunas) {
+    FILE* arquivo = fopen(nomeArquivo, "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            fprintf(arquivo, "%d\n", matriz[i][j]);
+        }
+    }
+
+    fclose(arquivo);
+}
 
 int main() {
     int bloco[MAX_IN_MEMORY];
@@ -228,6 +281,7 @@ int main() {
     int matriz[MAX_IN_MEMORY][MAX_IN_MEMORY];
     int passagem = 1;
     int menorNumero,s;
+    
 
 
     
@@ -242,56 +296,85 @@ int main() {
     int chaves3[] = {9,  2, 15, 19, 10, 14,  4, 13,  2, 19};
     int chaves4[] = {178, 231, 244, 292, 321, 356, 389, 421, 482, 488, 490, 502, 546, 641, 694, 786, 841, 890, 899, 922};
     int tamanho = sizeof(chaves1);
+    int tamVetorPrincipal = tamanho / sizeof(chaves1[0]);
+
+    //criando os arquivos de entrada intermediarios para guardar os blocos de dados
     particionarVetor(chaves1,tamanho);
+
+     //criar  arquivos intermediarios para receber as intercalacoes 
+    for(int i = 0;i<MAX_IN_MEMORY;i++){
+            sprintf(nomeSaida[i], "saida%d.txt", i + MAX_IN_MEMORY+1);
+            printf("%s\n",nomeSaida[i]);
+        arquivosSaida[i] = fopen(nomeSaida[i], "w");
+        if (arquivosSaida[i] == NULL) {
+            printf("Erro ao criar o arquivo de saida %s\n",nomeSaida[i]);
+            return 1;
+        }
+    }
 
     /* arquivos[0] = fopen("entrada1.txt", "r");
     arquivos[1] = fopen("entrada2.txt", "r");
     arquivos[2] = fopen("entrada3.txt", "r");
     arquivos[3] = fopen("entrada4.txt", "r");
     arquivos[4] = fopen("entrada5.txt", "r"); */
-
-    for(int i = 0;i<MAX_IN_MEMORY;i++){
-        if(i< MAX_IN_MEMORY){
+    
+    
+    //intercalando os blocos para colocar nos arquivos de saidas  
+    for(int p = 0;p <= (tamVetorPrincipal/(MAX_IN_MEMORY*MAX_IN_MEMORY));p++){
+        printf("p = %d\n",p);
+        for(int i = 0;i<MAX_IN_MEMORY;i++){
             sprintf(nomesEntrada[i], "entrada%d.txt", i + 1);
             //printf("%s\n",nomesEntrada[i]);
-        }
-        arquivos[i] = fopen(nomesEntrada[i], "r");
-        if (arquivos[i] == NULL) {
-            printf("Erro ao abrir o arquivo\n");
-            return 1;
-        }
-    }
-    for (int i = 0; i < MAX_IN_MEMORY; i++) {
-        for (int j = 0; j < MAX_IN_MEMORY; j++) {
-            fscanf(arquivos[i], "%d", &matriz[i][j]);
-        }
-    }
-    for(int j = 0;j<MAX_IN_MEMORY;j++){
-            printf("Arquivo %d\n",i+1);
-            for(k=0;k<MAX_IN_MEMORY;k++){
-                printf("\t%d -",matriz[j][k]);
+            arquivos[i] = fopen(nomesEntrada[i], "r");
+            if (arquivos[i] == NULL) {
+                printf("Erro ao abrir o arquivo\n");
+                return 1;
             }
-    }
-    int menorIndice = 0;
-    for (j = 0; j < MAX_IN_MEMORY; j++) {
-        //menorIndice = 0;
-        menorNumero = matriz[menorIndice][j];
+        }
+
+        int inicio = MAX_IN_MEMORY * p;
+        int limite = inicio + MAX_IN_MEMORY - 1;
+
+        // preenchendo o bloco com elementos
+       /*  for (int i = inicio; i <= limite; i++) {
+            for (int j = 0; j < MAX_IN_MEMORY; j++) {
+                fscanf(arquivos[i-inicio], "%d", &matriz[i][j]);
+            }
+            //bloco[p - inicio] = vetor[p];
+        } */
+        printf("Aqui\n");
+        for (int i = inicio; i <= limite; i++) {
+                    printf("elementos %d--",arquivos[i]);
+            for (int j = 0; j < MAX_IN_MEMORY; j++) {
+                        printf("Aqu3\n");
+                int c;
+                while( c < MAX_IN_MEMORY * )
+                fscanf(arquivos[i], "%d", &matriz[i-(MAX_IN_MEMORY*p)][j]);
+            }
+        }
+
+       
         
+        imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+        ordenarMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
 
-        // Encontra o menor número da posição atual
-        for (i = 1; i < MAX_IN_MEMORY; i++) {
-            if (matriz[i][j] < menorNumero) {
-                menorNumero = matriz[i][j];
-                menorIndice = i;
-            }
-            else{
-                menorIndice ++;
-            }
-                    printf("Menor indice= %d\n",menorIndice);
-                    printf("Menor numero : %d\n",menorNumero);
+        printf("Matriz ordenado: \n ");
+        imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
 
-        }
+        //colocando os dados intercalados nos arquivos de saida
+        salvarMatrizEmArquivo(nomeSaida[i], matriz, MAX_IN_MEMORY, MAX_IN_MEMORY);
 
+    
+
+    //const char* nomeArquivo = "matriz.txt";
+
+
+    
+    
     }
+        
     return 0;
 }
+
+
+
