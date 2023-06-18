@@ -334,7 +334,16 @@ int main() {
 
         int inicio = MAX_IN_MEMORY * p;
         int limite = inicio + MAX_IN_MEMORY - 1;
-
+        int cont,leitor;
+        // Lê os primeiros 5 números
+       /*  for(int i = 0; i< MAX_IN_MEMORY;i++){
+            printf("leitor1 = %d\n", leitor);  // Faça o processamento necessário com o número
+            while (cont < 5 && fscanf(arquivos[i], "%d", leitor) == 1) {
+                printf("leitor = %d\n", leitor);  // Faça o processamento necessário com o número
+                cont++;
+            }
+        } */
+        
         // preenchendo o bloco com elementos
        /*  for (int i = inicio; i <= limite; i++) {
             for (int j = 0; j < MAX_IN_MEMORY; j++) {
@@ -343,26 +352,58 @@ int main() {
             //bloco[p - inicio] = vetor[p];
         } */
         printf("Aqui\n");
-        for (int i = inicio; i <= limite; i++) {
-                    printf("elementos %d--",arquivos[i]);
-            for (int j = 0; j < MAX_IN_MEMORY; j++) {
-                        printf("Aqu3\n");
-                int c;
-                while( c < MAX_IN_MEMORY * )
-                fscanf(arquivos[i], "%d", &matriz[i-(MAX_IN_MEMORY*p)][j]);
+        int passagem = 0;
+        while(passagem < (p+1)){
+            //printf("passagem = %d\n", passagem);
+            for (int k = inicio; k <= limite; k++) {
+                //printf("inicio: %d -- limite : %d\n", inicio , limite);
+                //printf("elementos %d--\n3",arquivos[i]);
+                for (int j = 0; j < MAX_IN_MEMORY; j++) {
+                    fscanf(arquivos[k-(MAX_IN_MEMORY*p)], "%d", &matriz[k-(MAX_IN_MEMORY*p)][j]);
+                }
             }
+            imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+            ordenarMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+            salvarMatrizEmArquivo(nomeSaida[passagem], matriz, MAX_IN_MEMORY, MAX_IN_MEMORY);
+            passagem++;
         }
-
-       
         
-        imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
-        ordenarMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
 
-        printf("Matriz ordenado: \n ");
-        imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+   
+
+   
+
+    // Lê os primeiros 5 números
+    /* while (contador < 5 && fscanf(arquivo, "%d", &numero) == 1) {
+        printf("%d\n", numero);  // Faça o processamento necessário com o número
+        contador++;
+    }
+
+    // Lê os próximos 5 números a cada iteração subsequente
+    while (fscanf(arquivo, "%d", &numero) == 1) {
+        printf("%d\n", numero);  // Faça o processamento necessário com o número
+        contador++;
+
+        if (contador == 10) {
+            // Já leu 10 números, interrompe o loop
+            break;
+        }
+    }
+
+    // Fecha o arquivo
+    fclose(arquivo); */
+
+ 
+
+        
+        //imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+        //ordenarMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
+
+        //printf("Matriz ordenado: \n ");
+        //imprimirMatriz(matriz,MAX_IN_MEMORY,MAX_IN_MEMORY);
 
         //colocando os dados intercalados nos arquivos de saida
-        salvarMatrizEmArquivo(nomeSaida[i], matriz, MAX_IN_MEMORY, MAX_IN_MEMORY);
+        //salvarMatrizEmArquivo(nomeSaida[i], matriz, MAX_IN_MEMORY, MAX_IN_MEMORY);
 
     
 
